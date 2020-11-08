@@ -1,2 +1,2 @@
 # csvmidi
-CSV to MIDI - CS50 Final Project
+CSV to MIDI - CS50x Final Project
