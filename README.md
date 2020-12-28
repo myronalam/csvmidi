@@ -5,6 +5,16 @@ The goal of this project is to allow a user to convert a CSV file to a MIDI file
 
 ## How to Use
 
+Dec 28, 2020 update:
+I am running out of time to finish this project.  I crossed out some of the items in original checklist that I think were too ambitious for my current ability that I don't think I'll have time to implement.  Most specifically, I decided that uploading files is too difficult for me to implement on my own for the course's 2020 deadline, and I'll use a text box input instead.  
+
+Files added in this commit are:
+- app.py
+- webpage templates
+- an example Plotly graph and MIDI player
+
+---
+
 As of Nov 8, 2020, `csvmidi.py` is only functional via command line in a terminal. The way to run the program is:
 
 ```
@@ -33,13 +43,14 @@ I envision the following tasks will need to be completed to have a web app I can
     - [x] Basic command line operation takes CSV input
     - [ ] Error checking of CSV file
     - [ ] Add some ability to modify parameters (tempo, time)
+- [ ] Modify python script to accept form text input and import into app.py
 - [ ] Configure web server to run python with MIDIUtil installed and flask to serve webpage
-- [ ] Create front end webpage for User Interface
-- [ ] Figure out file uploads, error checking, size limits
+- [x] Create front end webpage for User Interface
+- [ ] ~~Figure out file uploads, error checking, size limits~~
 - [ ] Implement (static) data visualization using Plotly
 
 Nice to have:
 - [ ] Maybe allow user to pick a key
-- [ ] Consider 3rd party authentication for storing data
+- [ ] ~~Consider 3rd party authentication for storing data~~
 - [ ] Tie project back to the Marketplace inspriation by connecting to the public data API provided by the Bureau of Labor Statistics
 

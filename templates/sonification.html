@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Sonification
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}
+
+{% block main %}
+<div class="container">
+    <h1>Sonification</h1>
+    <div>
+        <p>Your file was uploaded and "processed".</p>
+        <a class="btn btn-success" href="#" role="button">Download MIDI</a>
+        <p></p>
+    </div>
+
+    <!-- TODO, test.mid file right now -->
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <midi-player
+            src="static/test.mid"
+            sound-font visualizer="#myStaffVisualizer">
+            </midi-player>
+    
+            <midi-visualizer type="staff" id="myStaffVisualizer" 
+            src="static/test.mid">
+            </midi-visualizer>
+    
+            <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.0"></script>
+        </div>
+    </div>
+    
+    <h2>Scatter Plot</h2> 
+    <p>Here is a visulation of the data that was uploaded:</p>
+    <div id='myDiv' style="width:600px;height:250px;">
+        <!-- Plotly chart will be drawn inside this DIV -->
+    </div>
+    <script>
+        // Plotly Visualization
+        myDiv = document.getElementById('myDiv');
+        Plotly.newPlot(myDiv, [{
+            x: {{x}},
+            y: {{y}},
+        }], {
+            margin: { t: 0 }
+        });
+    </script>
+
+
+</div>
+{% endblock %}
