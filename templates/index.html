@@ -9,12 +9,22 @@ Home
 <div class="container">
     <h1>CSV to MIDI tool</h1>
 
-    <p>Welcome to my CS50x final project. This web app takes an upload of a CSV file, plots the data, and give a MIDI
-        file as output.</p>
+    <p>Welcome to my CS50x final project. This web app takes CSV formatted data, plots the data, and give a MIDI file as output.</p>
     <p>The process of using sound to convey information about data is <a
             href="https://en.wikipedia.org/wiki/Sonification">Sonification</a>.</p>
 
     <h2>Data to Convert:</h2>
+
+    <b>Assumptions and Limitations</b>
+    <ul>
+        <li>The textbox only accepts 1000 characters max.</li>
+        <li>Your data is assumed to be a timeseries with uniform time intervals.</li>
+        <li>The first column is assumed to be a timestamp.</li>
+        <li>The first row is assumed to be data labels.</li>
+        <li>The data values need to be numerical only (e.g. please change currency to a floating point number)</li>
+        <li>Each timestamp must have a data value for each column header. No blank data points allowed.</li>
+        <li>The delimiter needs to be a comma.</li>
+    </ul>
 
     <!-- Direct input, form textarea-->
     
@@ -23,9 +33,33 @@ Home
             <label>Input Data</label>
             <textarea onkeyup="textCounter(this,'counter',1000);" id="formInput" name="formInput" class="form-control" rows="4" maxlength="1000"></textarea>
         </div>
-        <p id="remainingC"></p>
+        <p>Remaining characters: <span id="remainingC"></span></p>
+
+        <!-- Simplifying project - headers are mandatory right now
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" checked id="headersCheck">
+            <label class="form-check-label" for="headersCheck">First Row Contains Headers</label>
+        </div>
+        -->
+        <br>
         <button class="btn btn-primary" type="submit">Submit</button>
     </form>
+
+    <script>
+        // Display remaining characters in text input box
+        function textCounter(field,field2,maxlimit)
+        {
+            var countfield = document.getElementById(formInput);
+
+            if (field.value.length > maxlimit) {
+                field.value = field.value.substring(0, maxlimit);
+                return false;
+            } else {
+                countfield.value = maxlimit - field.value.length;
+                document.getElementById("remainingC").innerHTML = countfield.value;
+            }
+        }
+    </script>
 
 </div>
 {% endblock %}

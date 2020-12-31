@@ -11,9 +11,12 @@ https://hackersandslackers.com/configure-flask-applications/
 from os import environ
 from flask import Flask, flash, jsonify, redirect, render_template,\
     request, session, url_for
+from wtforms import Form, TextField, TextAreaField, validators, StringField,\
+    SubmitField
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
 #import csvmidi
+import rawdata
 
 # Configure application
 UPLOAD_FOLDER = "/uploads"
@@ -73,7 +76,8 @@ def index():
         # Data submited using input form
         else:
             text_form = request.form.get("formInput")
-            print(type(text_form))
+            #print("raw data:\n" + text_form)
+            rawdata.parse(text_form)
             return redirect("/sonification")
 
     else:
@@ -113,4 +117,5 @@ def sonification():
                                     #filename=filename))
 
 """
-                                    
+if __name__ == "__main__":
+    app.run()

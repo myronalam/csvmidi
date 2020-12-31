@@ -5,6 +5,11 @@ The goal of this project is to allow a user to convert a CSV file to a MIDI file
 
 ## How to Use
 
+Dec 31, 2020 update:
+This is the last day of CS50x 2020!  I'm scoping my project out to something that I think its managable still.  This mid-day commit is to save my work, notably:
+- rawdata.py, the script I wrote for parsing raw data entered into the text box on the webpage
+- index.html, - added restrictions on data input
+
 Dec 28, 2020 update:
 I am running out of time to finish this project.  I crossed out some of the items in original checklist that I think were too ambitious for my current ability that I don't think I'll have time to implement.  Most specifically, I decided that uploading files is too difficult for me to implement on my own for the course's 2020 deadline, and I'll use a text box input instead.  
 
