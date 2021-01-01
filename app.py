@@ -7,24 +7,47 @@ https://pythonise.com/series/learning-flask/flask-uploading-files
 https://hackersandslackers.com/configure-flask-applications/
 
 """
-
+import os
 from os import environ
 from flask import Flask, flash, jsonify, redirect, render_template,\
     request, session, url_for
 from wtforms import Form, TextField, TextAreaField, validators, StringField,\
     SubmitField
+from flask_session import Session
+from tempfile import mkdtemp
 from werkzeug.utils import secure_filename
 from werkzeug.exceptions import RequestEntityTooLarge
-#import csvmidi
+from midiutil import MIDIFile
 import rawdata
 
 # Configure application
 app = Flask(__name__)
+SESSION_TYPE = 'filesystem'
+app.config.from_object(__name__)
+
+
+# Ensure responses aren't cached
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_FILE_DIR"] = mkdtemp()
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+app.config.from_object(__name__)
+Session(app)
 
 app.secret_key = environ.get('SECRET_KEY')
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    session['data2sound'] = []
+    session['columns'] = []
+
     if request.method == "POST":
         # Parse data submited using input form
         text_form = request.form.get("formInput")
@@ -41,8 +64,10 @@ def index():
                 except ValueError:
                     flash("Invalid data detected. Data must be numerical.")
                     return redirect(request.url)
-
-        print(data)
+        
+        # Transfer this stuff to sonification route
+        session['data2sound'] = data
+        session['columns'] = columnNames
 
         return redirect("/sonification")
 
@@ -51,11 +76,55 @@ def index():
 
 @app.route("/sonification", methods=["GET", "POST"])
 def sonification():
-    x = [1, 2, 3, 4, 5]
-    y = [1, 2, 4, 8, 16]
+    data2sound = session['data2sound']
+    columnNames = session['columns']
+
+    # variables to feed into csvmidi.py and scatter plot
+    x = [] 
+    y = [] # list of floats
+
+    for row in data2sound:
+        for column_index in range(1,len(columnNames)):
+            y.append(row[columnNames[column_index]])
+
+    # Generate x-axis intervals
+    for i in range(len(y)):
+        x.append(i)
+
+    # ---------------- Generate MIDI file ---------------------
+    values = y
+    # Change these variable number based on desired range of notes
+    low_note = 36 # y1
+    high_note = 96 # y2
+    min_values = min(values) # x1
+    max_values = max(values) # x2
+    slope = (high_note - low_note) / (max_values - min_values)
+
+    degrees = [] # list of int (MIDI note #)
+    for element in values:
+        degrees.append(int(round(slope * (element - min_values) + low_note)))
+
+    
+    # (1) preferences
+    track    = 0
+    channel  = 0
+    time     = 0   # In beats
+    duration = 1   # In beats
+    tempo    = 90  # In BPM
+    volume   = 100 # 0-127, as per the MIDI standard
+
+    MyMIDI = MIDIFile(1) # One track, defaults to format 1 (tempo track
+                        # automatically created)
+    MyMIDI.addTempo(track,time,tempo)
+
+    for pitch in degrees:
+        MyMIDI.addNote(track, channel, pitch, time, duration, volume)
+        time = time + 1
+
+    with open("static/midi/sonification.mid", "wb") as output_file:
+        MyMIDI.writeFile(output_file)
+
     return render_template("sonification.html", x=x, y=y)
-
-
 """
 ----------------------------------------------------------
 Code for file uploading - future implementation

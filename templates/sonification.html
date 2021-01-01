@@ -12,8 +12,8 @@ Sonification
 <div class="container">
     <h1>Sonification</h1>
     <div>
-        <p>Your file was uploaded and "processed".</p>
-        <a class="btn btn-success" href="#" role="button">Download MIDI</a>
+        <p>Your file was uploaded and processed.</p>
+        <a class="btn btn-success" href="static/midi/sonification.mid" role="button">Download MIDI</a>
         <p></p>
     </div>
 
@@ -21,12 +21,12 @@ Sonification
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <midi-player
-            src="static/test.mid"
+            src="static/midi/sonification.mid"
             sound-font visualizer="#myStaffVisualizer">
             </midi-player>
     
             <midi-visualizer type="staff" id="myStaffVisualizer" 
-            src="static/test.mid">
+            src="static/midi/sonification.mid">
             </midi-visualizer>
     
             <script src="https://cdn.jsdelivr.net/combine/npm/tone@14.7.58,npm/@magenta/music@1.21.0/es6/core.js,npm/focus-visible@5,npm/html-midi-player@1.1.0"></script>

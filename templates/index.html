@@ -7,7 +7,7 @@ Home
 
 {% block main %}
 <div class="container">
-    <h1>CSV to MIDI tool</h1>
+    <h1>CSV to MIDI</h1>
 
     <p>Welcome to my CS50x final project. This web app takes CSV formatted data, plots the data, and give a MIDI file as output.</p>
     <p>The process of using sound to convey information about data is <a
@@ -22,6 +22,7 @@ Home
         <li>The first column is assumed to be a timestamp.</li>
         <li>The first row is assumed to be data labels.</li>
         <li>The data values need to be numerical only (e.g. please change currency to a floating point number)</li>
+        <li>Only 1 timeseries is accepted at this time.</li>
         <li>Each timestamp must have a data value for each column header. No blank data points allowed.</li>
         <li>The delimiter needs to be a comma.</li>
     </ul>
@@ -30,10 +31,10 @@ Home
     
     <form action="/" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label>Input Data</label>
+            <label>Input Data Here:</label>
             <textarea onkeyup="textCounter(this,'counter',1000);" id="formInput" name="formInput" class="form-control" rows="4" maxlength="1000"></textarea>
         </div>
-        <p>Remaining characters: <span id="remainingC"></span></p>
+        <!--<p>Remaining characters: <span id="remainingC"></span></p>-->
 
         <!-- Simplifying project - headers are mandatory right now
         <div class="form-check">

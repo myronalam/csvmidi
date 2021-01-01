@@ -1,3 +1,5 @@
+# Original command-line version of the program
+
 import csv
 from sys import argv, exit
 from midiutil import MIDIFile
@@ -6,17 +8,17 @@ from midiutil import MIDIFile
 def main():
 """
 Code here for command line operation.
-
-"""
-
     # Check usage, correct # of commmand line args
     if len(argv) != 3:
         print("Usage: python csvmidi.py data.csv outfile.mid")
         exit(1)
-
     # Get outfile name
     outfile_name = argv[2]
     
+"""
+
+
+
     # Import csv file
     # (1) Get column names
     with open(argv[1], "r") as csvhead:
