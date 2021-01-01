@@ -19,12 +19,48 @@ from werkzeug.exceptions import RequestEntityTooLarge
 import rawdata
 
 # Configure application
-UPLOAD_FOLDER = "/uploads"
-
 app = Flask(__name__)
 
 app.secret_key = environ.get('SECRET_KEY')
 
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        # Parse data submited using input form
+        text_form = request.form.get("formInput")
+        formOutput = rawdata.parse(text_form)
+        data = formOutput[0]
+        columnNames = formOutput[1]
+
+        # Convert values from string to float
+        print(f"data = \n{data}\n")
+        for row in data:
+            for header_index in range(1,len(columnNames)):
+                try:
+                    row[columnNames[header_index]] = float(row[columnNames[header_index]])
+                except ValueError:
+                    flash("Invalid data detected. Data must be numerical.")
+                    return redirect(request.url)
+
+        print(data)
+
+        return redirect("/sonification")
+
+    else:
+        return render_template("index.html")
+
+@app.route("/sonification", methods=["GET", "POST"])
+def sonification():
+    x = [1, 2, 3, 4, 5]
+    y = [1, 2, 4, 8, 16]
+    return render_template("sonification.html", x=x, y=y)
+
+
+"""
+----------------------------------------------------------
+Code for file uploading - future implementation
+----------------------------------------------------------
+UPLOAD_FOLDER = "/uploads"
 app.config["ALLOWED_EXTENSIONS"] = ["CSV", "TXT"]
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -32,7 +68,8 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Limit size of upload, 1 MB
 app.config["MAX_CONTENT_PATH"] = 1024 * 1024
 
-
+# Ensure templates are auto-reloaded
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 def allowed_file(filename):
     if not "." in filename:
@@ -45,8 +82,6 @@ def allowed_file(filename):
     else:
         return False
 
-
-@app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         # check if file was submited (might not implement in time)
@@ -73,27 +108,6 @@ def index():
             print(csv)
             return redirect(request.url)
 
-        # Data submited using input form
-        else:
-            text_form = request.form.get("formInput")
-            #print("raw data:\n" + text_form)
-            rawdata.parse(text_form)
-            return redirect("/sonification")
-
-    else:
-        return render_template("index.html")
-
-@app.route("/sonification", methods=["GET", "POST"])
-def sonification():
-    x = [1, 2, 3, 4, 5]
-    y = [1, 2, 4, 8, 16]
-    return render_template("sonification.html", x=x, y=y)
-
-"""
-
-# Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-
 
 @app.route("/sonification", methods=["GET", "POST"])
 def sonification():
@@ -115,7 +129,7 @@ def sonification():
             return render_template("sonification.html")
             #return redirect(url_for("uploaded_file",
                                     #filename=filename))
-
 """
+
 if __name__ == "__main__":
     app.run()

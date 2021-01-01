@@ -4,6 +4,11 @@ from midiutil import MIDIFile
 # https://midiutil.readthedocs.io/en/1.2.1/index.html?highlight=license#introduction
 
 def main():
+"""
+Code here for command line operation.
+
+"""
+
     # Check usage, correct # of commmand line args
     if len(argv) != 3:
         print("Usage: python csvmidi.py data.csv outfile.mid")

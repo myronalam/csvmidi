@@ -1,37 +1,25 @@
-# Raw data parsing - returns dict formOutput
-# formOutput = {'column': [value1, value2], 'column2': [value3, value4]}
+# Raw data parsing - returns tuple:
+# [0] list of dict, data
+# [1] list, column names
+
+import csv
 
 def parse(formInput):
-    # Get rid of leading and trailing spaces
-    formInput = formInput.lstrip(" \r\n")
-    formInput = formInput.rstrip(" \r\n")
+    # Get rid of spaces
+    formInput = formInput.strip()
 
-    # hard coded, modify to accept inputs in the future
-    delimiter = ","
+    # f is the CSV formated data, can use functions from csv library
+    f = formInput.splitlines()
 
-    # Create list of rows from raw data, store in temp
-    temp = formInput.split("\r")
-
-    # Remove new line character from each row, separate data by delimiter
-    temp2 = []
-    for item in temp:
-        temp2.append(item.strip("\n").split(delimiter))
+    print(f)
     
-    firstRow = temp2[0]
-    print(f"firstRow = {firstRow}")
-    numColumns = len(temp2[0])
+    # (1) Get column names
+    reader = csv.DictReader(f)
+    columns = reader.fieldnames
 
-    # Generate keys (column headers) for dictionary formOutput
-    formOutput = {}
-    for header in temp2[0]:
-        formOutput[header] = []
-
-    # Iterate through data to add to dict formOutput, skipping first row
-    count = 0
-    for row in range(1,len(temp2)):
-        for item in temp2[row]:
-            print(item)
-            formOutput[firstRow[count % numColumns]].append(item)
-            count += 1
-
-    return formOutput
+    # (2) Created ordered dictionary from CSV
+    data = []
+    for row in reader:
+        data.append(row)
+    
+    return data, columns
